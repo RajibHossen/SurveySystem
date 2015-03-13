@@ -1,0 +1,40 @@
+.container{
+	width: 960px;
+	margin: 0 auto;
+}
+.HeadTitle{
+	text-align: center;
+}
+.subTitle{
+	text-align: left;
+}
+.row1{
+	border: 2px solid black;
+	width: 100%;
+	padding: 3px;
+}
+.row2{
+	border: 2px solid black;
+	width: 100%;
+	border-top: 0;
+	padding: 3px;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+    width: 43px;
+}
+.table-main {
+  width: 960px; margin: 0 auto;
+}
+.des {
+  width: 400px;
+}
+.form-main {}
+.form-main input[type=radio] { display: inline-block;}
+.form-main {}
+
