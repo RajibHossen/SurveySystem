@@ -42,7 +42,8 @@ function printSurvey()
 	<table class="table-main">
 		<tr>
 		    <th></th>
-		    <th>Serial</th>    
+		    <th>Serial</th>
+		    <th>Question ID</th>    
 		    <th class="des">Description</th>   
 		    <th>Very Good</th>   
 		    <th>Good</th>   
@@ -64,7 +65,7 @@ function printSurvey()
 	$a = 0;
 	$i = 1;
 	foreach ($categoryNames as $cat) {
-
+		
 		$result = mysqli_query($sql, "SELECT question_id,question from question WHERE category ='$cat'");
 
 		while ($row = mysqli_fetch_array($result, MYSQL_ASSOC)) 
@@ -74,14 +75,15 @@ function printSurvey()
 
 		}
 		$count = 0;
-		$increment = 0;
-		for($increment = 0;$increment < $values[$a];$increment++) {
+
+		foreach ($question as $key => $ques) {
 			if($count==0)
 			{
 				echo '<tr>';
 				echo '<td rowspan=$values[$a] style="border-bottom:none">'.$cat.'</td>';
 				echo '<td>'.$i.'</td>';
-				echo '<td>'.$question[$count].'</td>';
+				echo '<td>'.$questionID[$count].'</td>';
+				echo '<td>'.$ques.'</td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="5"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="4"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="3"></td>';
@@ -94,7 +96,8 @@ function printSurvey()
 				echo '<tr>';
 				echo '<td style="border:none"></td>';
 				echo '<td>'.$i.'</td>';
-				echo '<td>'.$question[$count].'</td>';
+				echo '<td>'.$questionID[$count].'</td>';
+				echo '<td>'.$ques.'</td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="5"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="4"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="3"></td>';
@@ -105,7 +108,9 @@ function printSurvey()
 			}
 			$count++;
 			$i++;
-			}
+		}
+		unset($question);
+		unset($questionID);
 		$a++;
 		# code...
 	}
