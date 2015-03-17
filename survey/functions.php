@@ -51,11 +51,9 @@ function printSurvey()
 		    <th>Bad</th>   
 		    <th>Too Bad</th>
 		</tr>
-	<form method="POST" action="">
-	<input type="hidden" name="sid" value="">
-	<input type="hidden" name="action" value="0">';
+	<form method="POST" action="processAnswers.php">';
 
-	$test = mysqli_query($sql,"SELECT category,count(*) AS value FROM question GROUP BY category");
+	$test = mysqli_query($sql,"SELECT category,count(*) AS value FROM questions GROUP BY category");
 
 	while ($row = mysqli_fetch_array($test, MYSQL_ASSOC)) {
 		# code...
@@ -63,10 +61,10 @@ function printSurvey()
 		$values[] = $row['value'];
 	}
 	$a = 0;
-	$i = 1;
+	$serial = 1;
 	foreach ($categoryNames as $cat) {
 		
-		$result = mysqli_query($sql, "SELECT question_id,question from question WHERE category ='$cat'");
+		$result = mysqli_query($sql, "SELECT question_id,question from questions WHERE category ='$cat'");
 
 		while ($row = mysqli_fetch_array($result, MYSQL_ASSOC)) 
 		{
@@ -81,10 +79,10 @@ function printSurvey()
 			{
 				echo '<tr>';
 				echo '<td rowspan=$values[$a] style="border-bottom:none">'.$cat.'</td>';
-				echo '<td>'.$i.'</td>';
+				echo '<td>'.$serial.'</td>';
 				echo '<td>'.$questionID[$count].'</td>';
 				echo '<td>'.$ques.'</td>';
-				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="5"></td>';
+				echo '<td align="center"><input type="radio" required  name="'.$questionID[$count].'" value="5"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="4"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="3"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="2"></td>';
@@ -95,10 +93,10 @@ function printSurvey()
 			{
 				echo '<tr>';
 				echo '<td style="border:none"></td>';
-				echo '<td>'.$i.'</td>';
+				echo '<td>'.$serial.'</td>';
 				echo '<td>'.$questionID[$count].'</td>';
 				echo '<td>'.$ques.'</td>';
-				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="5"></td>';
+				echo '<td align="center"><input type="radio" required name="'.$questionID[$count].'" value="5"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="4"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="3"></td>';
 				echo '<td align="center"><input type="radio" name="'.$questionID[$count].'" value="2"></td>';
@@ -107,19 +105,34 @@ function printSurvey()
 
 			}
 			$count++;
-			$i++;
+			$serial++;
 		}
 		unset($question);
 		unset($questionID);
 		$a++;
 		# code...
 	}
-	
-	echo '</form></table></div>';
-	echo '<div id="submit"><input type="submit" value="Submit"></div>';	
+	$serial--;
+	echo '</table></div>';
+	//Getting maximum question id from the database
+	$maximumQId = mysqli_query($sql, "SELECT MAX(question_id) FROM questions");
+	$resprow = mysqli_fetch_array($maximumQId);
+	$maxqid = $resprow['MAX(question_id)'];
+
+	//Getting minimum question ID
+	$MinimumQId = mysqli_query($sql, "SELECT MIN(question_id) FROM questions");
+	$resprow = mysqli_fetch_array($MinimumQId);
+	$minqid = $resprow['MIN(question_id)'];
+
+	echo '<input type = "hidden" name = "maxQId" value = '.$maxqid.'>';	
+	echo '<input type = "hidden" name = "minQId" value = '.$minqid.'>';	
+	echo '<input type="submit" name = "submit" value="Submit"></div>';	
+	echo '</form>';
 	echo mysqli_error($sql);
 	
 	mysqli_close($sql);
 		
 }
+
+
 ?>
