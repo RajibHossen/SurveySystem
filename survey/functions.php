@@ -28,17 +28,15 @@ function connectMySQL()
 }
 
 
-function printSurvey()
+function printSurvey($courseID,$courseName)
 {
 	include 'mysqlconfig.php';
-	
-	//Prints a survey with id $sid
-	//Returned bool determines success
-	
+
 	$sql = connectMySQL();
 	
 	//Prints head of survey
 	echo '<div id="content">
+	<h3 class = "TitleText">Please complete all the question</h3>
 	<table class="table-main">
 		<tr>
 		    <th></th>
@@ -126,12 +124,61 @@ function printSurvey()
 
 	echo '<input type = "hidden" name = "maxQId" value = '.$maxqid.'>';	
 	echo '<input type = "hidden" name = "minQId" value = '.$minqid.'>';	
+	echo '<input type = "hidden" name = "course_id" value = "'.$courseID.'">';	
+	echo '<input type = "hidden" name = "course_name" value = "'.$courseName.'">';	
 	echo '<input type="submit" name = "submit" value="Submit"></div>';	
 	echo '</form>';
 	echo mysqli_error($sql);
 	
 	mysqli_close($sql);
 		
+}
+function printResult($courseID,$courseName){
+
+	include 'mysqlconfig.php';
+	
+	$sql = connectMySQL();
+	echo '<div id="content">
+	<h3 class = "TitleText">Responses for different courses</h3>
+	<table class="table-main">
+		<tr>
+		    <th>Course Code</th>  
+		    <th class="des">Course Name</th>   
+		    <th>Average Response Value</th>   
+		    <th>Total Response</th>   
+		</tr>';
+
+		$query = mysqli_query($sql,"SELECT course_id,count(*) FROM responses GROUP BY course_id");
+		while ($row = mysqli_fetch_array($query, MYSQL_ASSOC)) {
+			# code...
+			$courseIDs[] = $row['course_id'];
+			$numberOfTimes[] = $row['count(*)'];
+		}
+		$k = 0;
+		foreach ($courseIDs as $key => $Ccode) {
+			echo '<tr>';
+			echo '<td>'.$Ccode.'</td>';
+			//query to database for fetching course names.
+			$queryForNames = mysqli_query($sql,"SELECT course_name,AVG(value) FROM responses WHERE course_id = '$Ccode'");
+			$res = mysqli_fetch_array($queryForNames);
+			$course = $res['course_name'];
+			$averageValue = $res['AVG(value)'];
+			//end of query
+			echo '<td>'.$course.'</td>';
+			echo '<td>'.$averageValue.'</td>';
+			echo '<td>'.$numberOfTimes[$k].'</td>';
+			echo '</tr>';
+			$k++;
+		}
+		
+	
+
+
+	echo '</table>
+	</div>';
+
+
+
 }
 
 

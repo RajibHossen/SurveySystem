@@ -1,4 +1,5 @@
 <?php 
+
 include 'mysqlconfig.php';
 
 function connectMySQL()
@@ -23,9 +24,12 @@ function connectMySQL()
 
 $MaxQId = $_POST["maxQId"];
 $MinQId = $_POST["minQId"];
+$courseID = $_POST["course_id"];
+$courseName = $_POST["course_name"];
 $success = 1;
 
 $sql = connectMySQL();
+echo $courseID;
 for ($count=$MinQId;$count<=$MaxQId;$count++) { 
 	if (isset($_POST[$count])) {
 		/*echo 'Response value for Question ID"'.$count.'" is:';
@@ -33,11 +37,10 @@ for ($count=$MinQId;$count<=$MaxQId;$count++) {
 		echo "<br/>";
 		*/
 		$rating = $_POST[$count];
-		$insert = mysqli_query($sql,"INSERT INTO responses (value,question_id) VALUES ('$rating','$count')") or die(mysql_error());
+		$insert = mysqli_query($sql,"INSERT INTO responses (course_id,course_name,value,question_id) VALUES ('$courseID','$courseName','$rating','$count')") or die(mysql_error());
 		if ($insert == FALSE) {
-			//echo "something went wrong";
-			# code...
 			$success = 0;
+			exit();
 		}
 	}
 	else{
@@ -47,5 +50,7 @@ for ($count=$MinQId;$count<=$MaxQId;$count++) {
 if ($success==1) {
 	echo "Thanks for your passion. you can submit a new form if you want";
 }
+else
+	echo "something went wrong";
 
 ?>
