@@ -29,7 +29,7 @@ $courseName = $_POST["course_name"];
 $success = 1;
 
 $sql = connectMySQL();
-echo $courseID;
+//echo $courseID;
 for ($count=$MinQId;$count<=$MaxQId;$count++) { 
 	if (isset($_POST[$count])) {
 		/*echo 'Response value for Question ID"'.$count.'" is:';
@@ -49,8 +49,9 @@ for ($count=$MinQId;$count<=$MaxQId;$count++) {
 }
 if ($success==1) {
 	echo "Thanks for your passion. you can submit a new form if you want";
+	echo "<a href = index.php>New Survey Form</a>";
 }
 else
-	echo "something went wrong";
+	//echo "something went wrong";
 
 ?>
